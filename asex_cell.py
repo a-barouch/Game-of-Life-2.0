@@ -19,23 +19,35 @@ class Asex(Cell):
 
     def calc_updated_life_stat(self, board):
         self.new_status = self.life_status
+
+        # count alive neighbors of all types
         total_alive, _ = self.count_live_neighbors(board)
+
+        # death caused by overpopulation
         if total_alive > 3 or total_alive < 2:
             self.new_status = DEAD
-        if self.get_life_status()== ALIVE and flip_coin(self.reproduction_prob):
+
+        # asexual reproduction if the cell is alive and by probability
+        if self.get_life_status() == ALIVE and flip_coin(self.reproduction_prob):
             self.asexual_reproduction(board)
         return self.new_status
 
     def asexual_reproduction(self, board):
         dead_neighbors = []
+
+        # find available cells to reproduction
         for i in range(self.row - 1, self.row + 2):
             for j in range(self.col - 1, self.col + 2):
                 if self.valid_indices(i, j, board):
                     cur_neighbor = board.mat[i][j]
                     if cur_neighbor.get_life_status() == DEAD:
                         dead_neighbors.append(cur_neighbor)
-        if len(dead_neighbors)==0:
+
+        # no available cells were found
+        if len(dead_neighbors) == 0:
             return
+
+        # create a child cell in the available cell
         child = random.choice(dead_neighbors)
         row = child.row
         col = child.col

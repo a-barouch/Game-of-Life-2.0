@@ -1,4 +1,3 @@
-
 DEAD = 0
 ALIVE = 1
 
@@ -22,17 +21,22 @@ class Cell:
 
     def calc_updated_life_stat(self, board):
         self.new_status = self.life_status
+
+        # count alive neighbors of all types and of self type
         total_alive, total_alive_for_repr = self.count_live_neighbors(board)
+
+        # death caused by overpopulation
         if total_alive > 3 or total_alive < 2:
             self.new_status = DEAD
+
+        # creation of a new cell by reproduction
         if total_alive_for_repr == 3 and self.get_life_status() == 0:
             self.new_status = ALIVE
             self.is_preyed = False
         return self.new_status
 
-
     def count_live_neighbors(self, board):
-        total_alive,total_alive_for_repr = 0,0
+        total_alive, total_alive_for_repr = 0, 0
         for i in range(self.row - 1, self.row + 2):
             for j in range(self.col - 1, self.col + 2):
                 if self.valid_indices(i, j, board):
@@ -40,19 +44,25 @@ class Cell:
                     if cur.type == self.type:
                         total_alive_for_repr += cur.get_life_status()
                     total_alive += cur.get_life_status()
-        return total_alive,total_alive_for_repr
+        return total_alive, total_alive_for_repr
 
     def get_life_status(self):
         return self.life_status
 
     def set_life_status(self, use_calculated_status, status_to_set=None, board=None):
+
+        # set new status after full iteration of the board
         if use_calculated_status:
             self.life_status = self.new_status
-            if self.life_status==DEAD or self.is_preyed==True:
-                self.life_status=DEAD
+
+            # create Cell object after death
+            if self.life_status == DEAD or self.is_preyed:
+                self.life_status = DEAD
                 row = self.row
                 col = self.col
                 board.mat[row][col] = Cell(row, col)
                 board.mat[row][col].life_status = DEAD
+
+        # set by given status
         else:
             self.life_status = status_to_set

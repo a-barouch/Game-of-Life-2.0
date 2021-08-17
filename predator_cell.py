@@ -30,6 +30,7 @@ class Predator(Cell):
                             # find potential prey
                             else:
                                 eatable_neighbors.append(cur_neighbor)
+                        # find location for reproduction
                         else:
                             dead_neighbors.append(cur_neighbor)
             # the predator did not find anything to prey upon
@@ -48,6 +49,6 @@ class Predator(Cell):
                     col = child.col
                     board.mat[row][col] = Predator(row, col)
                     board.mat[row][col].new_status = ALIVE
-                    print("Parent row: " + str(self.row) + " Parent col: " + str(self.col))
-                    print("Child row: " + str(row) + " Child col: " + str(col) + "\n")
+                    # print("Parent row: " + str(self.row) + " Parent col: " + str(self.col))
+                    # print("Child row: " + str(row) + " Child col: " + str(col) + "\n")
         return self.new_status
