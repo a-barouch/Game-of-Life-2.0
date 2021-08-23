@@ -12,6 +12,7 @@ class Predator(Cell):
         self.type = "PREDATOR"
         self.radius = 2
 
+
     def calc_updated_life_stat(self, board):
         self.new_status = self.life_status
         eatable_neighbors = []

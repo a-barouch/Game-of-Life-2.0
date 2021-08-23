@@ -130,3 +130,4 @@ class Board:
         print("Predator count: " + str(predator))
         print("Alive count: " + str(alive))
         print("Dead count: " + str(dead) + "\n")
+        return sexual, asexual, predator

@@ -16,6 +16,7 @@ class Asex(Cell):
         self.type = "ASEXUAL"
         self.reproduction_prob = 0.5
         self.is_preyed = False
+        self.lonely = False
 
     def calc_updated_life_stat(self, board):
         self.new_status = self.life_status
@@ -24,7 +25,9 @@ class Asex(Cell):
         total_alive, _ = self.count_live_neighbors(board)
 
         # death caused by overpopulation
-        if total_alive > 3 or total_alive < 2:
+        if total_alive > 3:
+            self.new_status = DEAD
+        if total_alive < 2 and self.lonely:
             self.new_status = DEAD
 
         # asexual reproduction if the cell is alive and by probability
