@@ -8,7 +8,8 @@ if __name__ == '__main__':
     root = None
     if IS_GUI:  # show board on screen
         root = tk.Tk()
-    my_board = board.Board(root=root, alive_prob=0.5, gui=IS_GUI, rows=50, cols=50, type_prob_list=(50, 50, 0), move=False)
+    my_board = board.Board(root=root, alive_prob=0.5, gui=IS_GUI, rows=50, cols=50, type_prob_list=(1, 0, 0),
+                           move=False, age=False, lonely = True)
     i = 0
     sexual_list, asexual_list, predator_list = [], [], []
     while True:

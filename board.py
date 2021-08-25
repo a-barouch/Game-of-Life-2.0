@@ -15,15 +15,18 @@ def flip_coin(life_rate):
 
 class Board:
 
-    def __init__(self, root, alive_prob, gui, rows=10, cols=10, type_prob_list=(1, 0, 0), move=True):
+    def __init__(self, root, alive_prob, gui, rows=10, cols=10, type_prob_list=(1, 0, 0), move=True, age=True, lonely=False):
         if type_prob_list is None:
             type_prob_list = [1, 0, 0]
         self.num_rows = rows
         self.num_cols = cols
-        self.mat = [[cell.Cell(i, j) for j in range(self.num_cols)] for i in range(self.num_rows)]
+        self.age = age
+        self.lonely = lonely
+        self.mat = [[cell.Cell(i, j,self.age, self.lonely) for j in range(self.num_cols)] for i in range(self.num_rows)]
         self.randomize_cells(alive_prob, type_prob_list)
         self.gui = gui
         self.move = move
+
 
         # CODE FOR GUI
         if self.gui:
@@ -103,9 +106,9 @@ class Board:
                 if new_location is not None:
                     new_location.new_status = self.mat[i][j].new_status
                     if self.mat[i][j].type == "SEXUAL":
-                        new_obj = cell.Cell(new_location.row, new_location.col)
+                        new_obj = cell.Cell(new_location.row, new_location.col, self.age, self.lonely)
                     elif self.mat[i][j].type == "ASEXUAL":
-                        new_obj = asex_cell.Asex(new_location.row, new_location.col)
+                        new_obj = asex_cell.Asex(new_location.row, new_location.col, self.age, self.lonely)
                     elif self.mat[i][j].type == "PREDATOR":
                         new_obj = predator_cell.Predator(new_location.row, new_location.col)
                     self.mat[new_location.row][new_location.col] = new_obj
@@ -118,9 +121,9 @@ class Board:
             for j in range(self.num_cols):
                 cell_type = random.choices(TYPES, weights=type_prob_list)[0]
                 if cell_type == 'SEXUAL':
-                    self.mat[i][j] = cell.Cell(i, j)
+                    self.mat[i][j] = cell.Cell(i, j, self.age, self.lonely)
                 elif cell_type == 'ASEXUAL':
-                    self.mat[i][j] = asex_cell.Asex(i, j)
+                    self.mat[i][j] = asex_cell.Asex(i, j, self.age, self.lonely)
                 elif cell_type == 'PREDATOR':
                     self.mat[i][j] = predator_cell.Predator(i, j)
                 status = flip_coin(life_rate)
@@ -144,9 +147,9 @@ class Board:
                 elif self.mat[i][j].get_life_status() and self.mat[i][j].type == "PREDATOR":
                     predator += 1
 
-        print("Sexual count: " + str(sexual))
-        print("Asexual count: " + str(asexual))
-        print("Predator count: " + str(predator))
-        print("Alive count: " + str(alive))
-        print("Dead count: " + str(dead) + "\n")
+        # print("Sexual count: " + str(sexual))
+        # print("Asexual count: " + str(asexual))
+        # print("Predator count: " + str(predator))
+        # print("Alive count: " + str(alive))
+        # print("Dead count: " + str(dead) + "\n")
         return sexual, asexual, predator

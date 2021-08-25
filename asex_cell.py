@@ -11,30 +11,32 @@ def flip_coin(rate):
 
 class Asex(Cell):
 
-    def __init__(self, row, col):
-        Cell.__init__(self, row, col)
+    def __init__(self, row, col, age, lonely):
+        Cell.__init__(self, row, col,age,lonely)
         self.type = "ASEXUAL"
-        self.reproduction_prob = 0.5
+        self.reproduction_prob = 1
         self.is_preyed = False
-        self.lonely = False
+        self.lonely = True
         self.age = True
         self.life_time = 5
+        self.age = age
+        self.lonely = lonely
 
     def calc_updated_life_stat(self, board):
-        self.new_status = self.life_status
 
         # count alive neighbors of all types
         total_alive, _ = self.count_live_neighbors(board)
 
         # death caused by overpopulation
-        if total_alive > 3:
-            self.new_status = DEAD
-        if total_alive < 2 and self.lonely:
-            self.new_status = DEAD
-        # if total_alive < 2 and not self.life_time:
-        #     self.new_status = DEAD
-        if not self.life_time and self.age:
-            self.new_status = DEAD
+        if self.life_status == ALIVE:
+            if total_alive > 3:
+                self.new_status = DEAD
+            elif total_alive < 2 and self.lonely:
+                self.new_status = DEAD
+            elif not self.life_time and self.age:
+                self.new_status = DEAD
+            else:
+                self.new_status = ALIVE
         # asexual reproduction if the cell is alive and by probability
         if self.get_life_status() == ALIVE and flip_coin(self.reproduction_prob):
             if self.age:
@@ -58,11 +60,15 @@ class Asex(Cell):
             return
 
         # create a child cell in the available cell
-        child = random.choice(dead_neighbors)
+        import secrets
+        child = secrets.choice(dead_neighbors)
         row = child.row
         col = child.col
-        board.mat[row][col] = Asex(row, col)
+        board.mat[row][col] = Asex(row, col, self.age, self.lonely)
         board.mat[row][col].new_status = ALIVE
+        if row> self.row and col> self.col:
+            print("Child: "+str(row)+", "+str(col))
+            print("Parent: " + str(self.row) + ", " + str(self.col)+"\n")
         board.mat[row][col].is_preyed = False
         # print("Parent row: "+str(self.row)+" Parent col: "+str(self.col))
         # print("Child row: "+str(row)+" Child col: "+str(col)+"\n")

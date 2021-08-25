@@ -12,17 +12,16 @@ def flip_coin(rate):
 class Cell:
     life_status = DEAD
 
-    def __init__(self, row, col):
+    def __init__(self, row, col, age, lonely):
         self.row = row
         self.col = col
         self.type = "SEXUAL"
         self.new_status = DEAD
         self.is_preyed = False
         self.movement_prob = 0.5
-        self.lonely = False
-        self.moved = False
-        self.age = True
         self.life_time = 5
+        self.age = age
+        self.lonely = lonely
 
     def valid_indices(self, i, j, board):
         if i >= 0 and j >= 0:  # non negative index
@@ -38,12 +37,22 @@ class Cell:
         total_alive, total_alive_for_repr = self.count_live_neighbors(board)
 
         # death caused by overpopulation
-        if total_alive > 3:
-            self.new_status = DEAD
-        if total_alive < 2 and self.lonely:
-            self.new_status = DEAD
-        if not self.life_time and self.age:
-            self.new_status = DEAD
+        if self.life_status == ALIVE:
+            if total_alive > 3:
+                self.new_status = DEAD
+            elif total_alive < 2 and self.lonely:
+                self.new_status = DEAD
+            elif not self.life_time and self.age:
+                self.new_status = DEAD
+            else:
+                self.new_status = ALIVE
+        # if self.life_status == ALIVE:
+        #     if total_alive > 3:
+        #         self.new_status = DEAD
+        #     if total_alive < 2 and self.lonely:
+        #         self.new_status = DEAD
+        #     if not self.life_time and self.age:
+        #         self.new_status = DEAD
         # creation of a new cell by reproduction
         if total_alive_for_repr == 3 and self.get_life_status() == DEAD:
             self.new_status = ALIVE
@@ -78,7 +87,6 @@ class Cell:
             if len(dead_neighbors) == 0:
                 return
             new_location = random.choice(dead_neighbors)
-            #self.moved = True
             return new_location
         return None
 
@@ -96,7 +104,7 @@ class Cell:
                 self.life_status = DEAD
                 row = self.row
                 col = self.col
-                board.mat[row][col] = Cell(row, col)
+                board.mat[row][col] = Cell(row, col, self.age, self.lonely)
                 board.mat[row][col].life_status = DEAD
 
         # set by given status
