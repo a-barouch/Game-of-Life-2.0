@@ -8,7 +8,7 @@ if __name__ == '__main__':
     root = None
     if IS_GUI:  # show board on screen
         root = tk.Tk()
-    my_board = board.Board(root=root, alive_prob=0.5, gui=IS_GUI, rows=50, cols=50, type_prob_list=(0.5, 0.5, 0), move = True)
+    my_board = board.Board(root=root, alive_prob=0.5, gui=IS_GUI, rows=50, cols=50, type_prob_list=(50, 50, 0), move=False)
     i = 0
     sexual_list, asexual_list, predator_list = [], [], []
     while True:
@@ -21,7 +21,7 @@ if __name__ == '__main__':
         #time.sleep(0.5)
         my_board.update_board()
         i += 1
-        if i % 50 == 0:
+        if i % 100 == 0:
             plt.scatter(x=list(range(len(sexual_list))), y=sexual_list, color='black', label='sexual')
             plt.scatter(x=list(range(len(sexual_list))), y=asexual_list, color='blue', label='asexual')
             plt.scatter(x=list(range(len(sexual_list))), y=predator_list, color='red', label='predator')

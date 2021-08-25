@@ -21,6 +21,8 @@ class Cell:
         self.movement_prob = 0.5
         self.lonely = False
         self.moved = False
+        self.age = True
+        self.life_time = 5
 
     def valid_indices(self, i, j, board):
         if i >= 0 and j >= 0:  # non negative index
@@ -40,11 +42,16 @@ class Cell:
             self.new_status = DEAD
         if total_alive < 2 and self.lonely:
             self.new_status = DEAD
-
+        if not self.life_time and self.age:
+            self.new_status = DEAD
         # creation of a new cell by reproduction
-        if total_alive_for_repr == 3 and self.get_life_status() == 0:
+        if total_alive_for_repr == 3 and self.get_life_status() == DEAD:
             self.new_status = ALIVE
+            if self.age:
+                self.life_time = 5
             self.is_preyed = False
+        if self.get_life_status() == ALIVE and self.age:
+            self.life_time -= 1
         return self.new_status
 
     def count_live_neighbors(self, board):
