@@ -14,7 +14,7 @@ class Asex(Cell):
     def __init__(self, row, col):
         Cell.__init__(self, row, col)
         self.type = "ASEXUAL"
-        self.reproduction_prob = 0.5
+        self.reproduction_prob = 0.4
         self.is_preyed = False
         self.lonely = False
 
@@ -29,7 +29,6 @@ class Asex(Cell):
             self.new_status = DEAD
         if total_alive < 2 and self.lonely:
             self.new_status = DEAD
-
         # asexual reproduction if the cell is alive and by probability
         if self.get_life_status() == ALIVE and flip_coin(self.reproduction_prob):
             self.asexual_reproduction(board)

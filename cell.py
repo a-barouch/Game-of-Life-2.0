@@ -1,6 +1,13 @@
 DEAD = 0
 ALIVE = 1
 
+import random
+
+
+
+def flip_coin(rate):
+    return 1 if random.random() < rate else 0
+
 
 class Cell:
     life_status = DEAD
@@ -11,6 +18,9 @@ class Cell:
         self.type = "SEXUAL"
         self.new_status = DEAD
         self.is_preyed = False
+        self.movement_prob = 0.5
+        self.lonely = False
+        self.moved = False
 
     def valid_indices(self, i, j, board):
         if i >= 0 and j >= 0:  # non negative index
@@ -26,7 +36,9 @@ class Cell:
         total_alive, total_alive_for_repr = self.count_live_neighbors(board)
 
         # death caused by overpopulation
-        if total_alive > 3 or total_alive < 2:
+        if total_alive > 3:
+            self.new_status = DEAD
+        if total_alive < 2 and self.lonely:
             self.new_status = DEAD
 
         # creation of a new cell by reproduction
@@ -45,6 +57,23 @@ class Cell:
                         total_alive_for_repr += cur.get_life_status()
                     total_alive += cur.get_life_status()
         return total_alive, total_alive_for_repr
+
+    def move(self, board):
+        dead_neighbors = []
+        if flip_coin(self.movement_prob) and self.new_status == ALIVE:
+            # iterate over neighbors
+            for i in range(self.row - 1, self.row + 2):
+                for j in range(self.col - 1, self.col + 2):
+                    if self.valid_indices(i, j, board):  # check if indices inside the board and not oneself
+                        cur_neighbor = board.mat[i][j]
+                        if cur_neighbor.new_status == DEAD:
+                            dead_neighbors.append(cur_neighbor)
+            if len(dead_neighbors) == 0:
+                return
+            new_location = random.choice(dead_neighbors)
+            #self.moved = True
+            return new_location
+        return None
 
     def get_life_status(self):
         return self.life_status

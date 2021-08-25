@@ -15,7 +15,7 @@ def flip_coin(life_rate):
 
 class Board:
 
-    def __init__(self, root, alive_prob, gui, rows=10, cols=10, type_prob_list=(1, 0, 0)):
+    def __init__(self, root, alive_prob, gui, rows=10, cols=10, type_prob_list=(1, 0, 0), move=True):
         if type_prob_list is None:
             type_prob_list = [1, 0, 0]
         self.num_rows = rows
@@ -23,6 +23,7 @@ class Board:
         self.mat = [[cell.Cell(i, j) for j in range(self.num_cols)] for i in range(self.num_rows)]
         self.randomize_cells(alive_prob, type_prob_list)
         self.gui = gui
+        self.move = move
 
         # CODE FOR GUI
         if self.gui:
@@ -75,7 +76,7 @@ class Board:
         for i in range(self.num_rows):
             for j in range(self.num_cols):
                 self.mat[i][j].calc_updated_life_stat(self)
-
+        if self.move: self.apply_movement()
         # update all cells life status after full iteration over board
         for i in range(self.num_rows):
             for j in range(self.num_cols):
@@ -91,7 +92,25 @@ class Board:
                         self.canvas.itemconfigure(self.rects[i][j], fill="blue")
                     elif self.mat[i][j].type == "PREDATOR":
                         self.canvas.itemconfigure(self.rects[i][j], fill="red")
+                    elif self.mat[i][j].moved:
+                        self.canvas.itemconfigure(self.rects[i][j], fill="yellow")
                 # CODE FOR GUI
+
+    def apply_movement(self):
+        for i in range(self.num_rows):
+            for j in range(self.num_cols):
+                new_location = self.mat[i][j].move(self)
+                if new_location is not None:
+                    new_location.new_status = self.mat[i][j].new_status
+                    if self.mat[i][j].type == "SEXUAL":
+                        new_obj = cell.Cell(new_location.row, new_location.col)
+                    elif self.mat[i][j].type == "ASEXUAL":
+                        new_obj = asex_cell.Asex(new_location.row, new_location.col)
+                    elif self.mat[i][j].type == "PREDATOR":
+                        new_obj = predator_cell.Predator(new_location.row, new_location.col)
+                    self.mat[new_location.row][new_location.col] = new_obj
+                    new_obj.new_status = ALIVE
+                    self.mat[self.mat[i][j].row][self.mat[i][j].col] = cell.Cell(self.mat[i][j].row, self.mat[i][j].col)
 
     # create cells of different types and life status by given probabilities
     def randomize_cells(self, life_rate, type_prob_list):

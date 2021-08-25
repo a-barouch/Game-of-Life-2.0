@@ -5,6 +5,9 @@ DEAD = 0
 ALIVE = 1
 
 
+def create_obj(row,col):
+    return Predator(row,col)
+
 class Predator(Cell):
 
     def __init__(self, row, col):
