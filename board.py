@@ -111,10 +111,10 @@ class Board:
                     elif self.mat[i][j].type == "ASEXUAL":
                         new_obj = asex_cell.Asex(new_location.row, new_location.col, self.age, self.lonely)
                     elif self.mat[i][j].type == "PREDATOR":
-                        new_obj = predator_cell.Predator(new_location.row, new_location.col)
+                        new_obj = predator_cell.Predator(new_location.row, new_location.col, self.age)
                     self.mat[new_location.row][new_location.col] = new_obj
                     new_obj.new_status = ALIVE
-                    self.mat[self.mat[i][j].row][self.mat[i][j].col] = cell.Cell(self.mat[i][j].row, self.mat[i][j].col)
+                    self.mat[self.mat[i][j].row][self.mat[i][j].col] = cell.Cell(self.mat[i][j].row, self.mat[i][j].col, self.age, self.lonely)
 
     # create cells of different types and life status by given probabilities
     def randomize_cells(self, life_rate, type_prob_list):
@@ -126,7 +126,7 @@ class Board:
                 elif cell_type == 'ASEXUAL':
                     self.mat[i][j] = asex_cell.Asex(i, j, self.age, self.lonely)
                 elif cell_type == 'PREDATOR':
-                    self.mat[i][j] = predator_cell.Predator(i, j)
+                    self.mat[i][j] = predator_cell.Predator(i, j, self.age)
                 status = flip_coin(life_rate)
                 self.mat[i][j].set_life_status(use_calculated_status=False, status_to_set=status)
 

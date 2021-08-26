@@ -10,10 +10,11 @@ def create_obj(row,col):
 
 class Predator(Cell):
 
-    def __init__(self, row, col):
-        Cell.__init__(self, row, col)
+    def __init__(self, row, col, age):
+        Cell.__init__(self, row, col, age, lonely=False)
         self.type = "PREDATOR"
         self.radius = 2
+        self.life_time = 5
 
 
     def calc_updated_life_stat(self, board):
@@ -51,7 +52,7 @@ class Predator(Cell):
                     child = random.choice(dead_neighbors)
                     row = child.row
                     col = child.col
-                    board.mat[row][col] = Predator(row, col)
+                    board.mat[row][col] = Predator(row, col, self.age)
                     board.mat[row][col].new_status = ALIVE
                     # print("Parent row: " + str(self.row) + " Parent col: " + str(self.col))
                     # print("Child row: " + str(row) + " Child col: " + str(col) + "\n")

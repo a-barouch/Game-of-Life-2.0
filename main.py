@@ -12,9 +12,9 @@ if __name__ == '__main__':
     IS_GUI = True
     ROWS = 50
     COLUMNS = 50
-    TYPE_PROB_LIST = (0.5, 0.5, 0)
-    MOVE = False  # default False
-    AGE = False  # default False
+    TYPE_PROB_LIST = (0.475, 0.475, 0.005)
+    MOVE = True  # default False
+    AGE = True  # default False
     LONELY = False  # default True
 
     if STATISTIC_MODE:
@@ -61,7 +61,7 @@ if __name__ == '__main__':
             if i % 100 == 0:
                 plt.scatter(x=list(range(len(sexual_list))), y=sexual_list, color='black', label='sexual')
                 plt.scatter(x=list(range(len(sexual_list))), y=asexual_list, color='blue', label='asexual')
-                # plt.scatter(x=list(range(len(sexual_list))), y=predator_list, color='red', label='predator')
+                plt.scatter(x=list(range(len(sexual_list))), y=predator_list, color='red', label='predator')
                 plt.xlabel("iteration")
                 plt.ylabel("count")
                 plt.title("Run: Removed loneliness | Reproduction: 0.25")
