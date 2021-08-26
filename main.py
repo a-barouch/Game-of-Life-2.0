@@ -4,7 +4,7 @@ import time
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
-    STATISTIC_MODE = True
+    STATISTIC_MODE = False
 
     # GAME PARAMETERS:
     root = None
@@ -12,26 +12,33 @@ if __name__ == '__main__':
     IS_GUI = True
     ROWS = 50
     COLUMNS = 50
-    TYPE_PROB_LIST = (0.5,0.5,0)
-    MOVE = False # default False
-    AGE = False # default False
-    LONELY = True # default True
+    TYPE_PROB_LIST = (0.5, 0.5, 0)
+    MOVE = False  # default False
+    AGE = False  # default False
+    LONELY = False  # default True
 
     if STATISTIC_MODE:
         IS_GUI = False
         NUM_ITERATIONS = 300
-        NUM_PLAYS = 5
-        sexual_wins, asexual_wins = 0,0
+        NUM_PLAYS = 10
+        sexual_wins, asexual_wins, extinction = 0, 0, 0
         for i in range(NUM_PLAYS):
-            my_board = board.Board(root=root, alive_prob=ALIVE_PROB, gui=IS_GUI, rows=ROWS, cols=COLUMNS, type_prob_list=TYPE_PROB_LIST,
+            my_board = board.Board(root=root, alive_prob=ALIVE_PROB, gui=IS_GUI, rows=ROWS, cols=COLUMNS,
+                                   type_prob_list=TYPE_PROB_LIST,
                                    move=MOVE, age=AGE, lonely=LONELY)
             for j in range(NUM_ITERATIONS):
                 my_board.update_board()
             sexual, asexual, predator = my_board.get_statistics()
-            if sexual>asexual: sexual_wins+=1
-            else: asexual_wins+=1
-        print("Total Sexual Wins: "+str(sexual_wins))
+            if sexual > asexual:
+                sexual_wins += 1
+            elif asexual > sexual:
+                asexual_wins += 1
+            elif asexual == sexual == 0:
+                extinction += 1
+
+        print("Total Sexual Wins: " + str(sexual_wins))
         print("Total Asexual Wins: " + str(asexual_wins))
+        print("Extinctions: " + str(extinction))
 
     else:
         if IS_GUI:  # show board on screen
@@ -48,15 +55,16 @@ if __name__ == '__main__':
             sexual_list.append(sexual)
             asexual_list.append(asexual)
             predator_list.append(predator)
-            #time.sleep(0.5)
+            # time.sleep(0.5)
             my_board.update_board()
             i += 1
             if i % 100 == 0:
                 plt.scatter(x=list(range(len(sexual_list))), y=sexual_list, color='black', label='sexual')
                 plt.scatter(x=list(range(len(sexual_list))), y=asexual_list, color='blue', label='asexual')
-                plt.scatter(x=list(range(len(sexual_list))), y=predator_list, color='red', label='predator')
+                # plt.scatter(x=list(range(len(sexual_list))), y=predator_list, color='red', label='predator')
                 plt.xlabel("iteration")
                 plt.ylabel("count")
+                plt.title("Run: Removed loneliness | Reproduction: 0.25")
                 plt.legend()
                 plt.show()
 
