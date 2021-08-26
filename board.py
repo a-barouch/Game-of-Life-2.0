@@ -86,17 +86,18 @@ class Board:
                 self.mat[i][j].set_life_status(use_calculated_status=True, board=self)
 
                 # CODE FOR GUI
-                if self.mat[i][j].get_life_status() == DEAD:
-                    self.canvas.itemconfigure(self.rects[i][j], fill="white")
-                else:
-                    if self.mat[i][j].type == "SEXUAL":
-                        self.canvas.itemconfigure(self.rects[i][j], fill="black")
-                    elif self.mat[i][j].type == "ASEXUAL":
-                        self.canvas.itemconfigure(self.rects[i][j], fill="blue")
-                    elif self.mat[i][j].type == "PREDATOR":
-                        self.canvas.itemconfigure(self.rects[i][j], fill="red")
-                    elif self.mat[i][j].moved:
-                        self.canvas.itemconfigure(self.rects[i][j], fill="yellow")
+                if self.gui:
+                    if self.mat[i][j].get_life_status() == DEAD:
+                        self.canvas.itemconfigure(self.rects[i][j], fill="white")
+                    else:
+                        if self.mat[i][j].type == "SEXUAL":
+                            self.canvas.itemconfigure(self.rects[i][j], fill="black")
+                        elif self.mat[i][j].type == "ASEXUAL":
+                            self.canvas.itemconfigure(self.rects[i][j], fill="blue")
+                        elif self.mat[i][j].type == "PREDATOR":
+                            self.canvas.itemconfigure(self.rects[i][j], fill="red")
+                        elif self.mat[i][j].moved:
+                            self.canvas.itemconfigure(self.rects[i][j], fill="yellow")
                 # CODE FOR GUI
 
     def apply_movement(self):
@@ -147,9 +148,9 @@ class Board:
                 elif self.mat[i][j].get_life_status() and self.mat[i][j].type == "PREDATOR":
                     predator += 1
 
-        # print("Sexual count: " + str(sexual))
-        # print("Asexual count: " + str(asexual))
-        # print("Predator count: " + str(predator))
-        # print("Alive count: " + str(alive))
-        # print("Dead count: " + str(dead) + "\n")
+        print("Sexual count: " + str(sexual))
+        print("Asexual count: " + str(asexual))
+        print("Predator count: " + str(predator))
+        print("Alive count: " + str(alive))
+        print("Dead count: " + str(dead) + "\n")
         return sexual, asexual, predator

@@ -14,7 +14,7 @@ class Asex(Cell):
     def __init__(self, row, col, age, lonely):
         Cell.__init__(self, row, col,age,lonely)
         self.type = "ASEXUAL"
-        self.reproduction_prob = 1
+        self.reproduction_prob = 0.25
         self.is_preyed = False
         self.lonely = True
         self.age = True
@@ -66,9 +66,9 @@ class Asex(Cell):
         col = child.col
         board.mat[row][col] = Asex(row, col, self.age, self.lonely)
         board.mat[row][col].new_status = ALIVE
-        if row> self.row and col> self.col:
-            print("Child: "+str(row)+", "+str(col))
-            print("Parent: " + str(self.row) + ", " + str(self.col)+"\n")
+        # if row> self.row and col> self.col:
+        #     print("Child: "+str(row)+", "+str(col))
+        #     print("Parent: " + str(self.row) + ", " + str(self.col)+"\n")
         board.mat[row][col].is_preyed = False
         # print("Parent row: "+str(self.row)+" Parent col: "+str(self.col))
         # print("Child row: "+str(row)+" Child col: "+str(col)+"\n")
