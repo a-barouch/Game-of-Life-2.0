@@ -8,14 +8,15 @@ if __name__ == '__main__':
 
     # GAME PARAMETERS:
     root = None
-    ALIVE_PROB = 0.5
+    ALIVE_PROB = 0.25
     IS_GUI = True
     ROWS = 50
     COLUMNS = 50
-    TYPE_PROB_LIST = (0.475, 0.475, 0.005)
-    MOVE = True  # default False
-    AGE = True  # default False
+    TYPE_PROB_LIST = (50, 50, 0.00)
+    MOVE = False  # default False
+    AGE = False  # default False
     LONELY = False  # default True
+    NO_BOUNDARY = True  # default false
 
     if STATISTIC_MODE:
         IS_GUI = False
@@ -25,7 +26,7 @@ if __name__ == '__main__':
         for i in range(NUM_PLAYS):
             my_board = board.Board(root=root, alive_prob=ALIVE_PROB, gui=IS_GUI, rows=ROWS, cols=COLUMNS,
                                    type_prob_list=TYPE_PROB_LIST,
-                                   move=MOVE, age=AGE, lonely=LONELY)
+                                   move=MOVE, age=AGE, lonely=LONELY, no_boundary=NO_BOUNDARY)
             for j in range(NUM_ITERATIONS):
                 my_board.update_board()
             sexual, asexual, predator = my_board.get_statistics()
@@ -45,7 +46,7 @@ if __name__ == '__main__':
             root = tk.Tk()
         my_board = board.Board(root=root, alive_prob=ALIVE_PROB, gui=IS_GUI, rows=ROWS, cols=COLUMNS,
                                type_prob_list=TYPE_PROB_LIST,
-                               move=MOVE, age=AGE, lonely=LONELY)
+                               move=MOVE, age=AGE, lonely=LONELY, no_boundary=NO_BOUNDARY)
         i = 0
         sexual_list, asexual_list, predator_list = [], [], []
         while True:

@@ -50,6 +50,8 @@ class Asex(Cell):
         # find available cells to reproduction
         for i in range(self.row - 1, self.row + 2):
             for j in range(self.col - 1, self.col + 2):
+                if board.no_boundary:
+                    i, j = board.mod_idx(i, j)
                 if self.valid_indices(i, j, board):
                     cur_neighbor = board.mat[i][j]
                     if cur_neighbor.get_life_status() == DEAD:

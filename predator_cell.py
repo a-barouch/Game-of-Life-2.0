@@ -26,6 +26,8 @@ class Predator(Cell):
             # iterate over neighbors
             for i in range(self.row - self.radius, self.row + self.radius+1):
                 for j in range(self.col - self.radius, self.col + + self.radius+1):
+                    if board.no_boundary:
+                        i, j = board.mod_idx(i, j)
                     if self.valid_indices(i, j, board):  # check if indices inside the board and not oneself
                         cur_neighbor = board.mat[i][j]
                         if cur_neighbor.get_life_status() == ALIVE:

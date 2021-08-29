@@ -15,18 +15,20 @@ def flip_coin(life_rate):
 
 class Board:
 
-    def __init__(self, root, alive_prob, gui, rows=10, cols=10, type_prob_list=(1, 0, 0), move=True, age=True, lonely=False):
+    def __init__(self, root, alive_prob, gui, rows=10, cols=10, type_prob_list=(1, 0, 0), move=True, age=True,
+                 lonely=False, no_boundary=False):
         if type_prob_list is None:
             type_prob_list = [1, 0, 0]
         self.num_rows = rows
         self.num_cols = cols
         self.age = age
         self.lonely = lonely
-        self.mat = [[cell.Cell(i, j,self.age, self.lonely) for j in range(self.num_cols)] for i in range(self.num_rows)]
+        self.mat = [[cell.Cell(i, j, self.age, self.lonely) for j in range(self.num_cols)] for i in
+                    range(self.num_rows)]
         self.randomize_cells(alive_prob, type_prob_list)
         self.gui = gui
         self.move = move
-
+        self.no_boundary = no_boundary
 
         # CODE FOR GUI
         if self.gui:
@@ -114,7 +116,8 @@ class Board:
                         new_obj = predator_cell.Predator(new_location.row, new_location.col, self.age)
                     self.mat[new_location.row][new_location.col] = new_obj
                     new_obj.new_status = ALIVE
-                    self.mat[self.mat[i][j].row][self.mat[i][j].col] = cell.Cell(self.mat[i][j].row, self.mat[i][j].col, self.age, self.lonely)
+                    self.mat[self.mat[i][j].row][self.mat[i][j].col] = cell.Cell(self.mat[i][j].row, self.mat[i][j].col,
+                                                                                 self.age, self.lonely)
 
     # create cells of different types and life status by given probabilities
     def randomize_cells(self, life_rate, type_prob_list):
@@ -129,6 +132,9 @@ class Board:
                     self.mat[i][j] = predator_cell.Predator(i, j, self.age)
                 status = flip_coin(life_rate)
                 self.mat[i][j].set_life_status(use_calculated_status=False, status_to_set=status)
+
+    def mod_idx(self, i, j):
+        return i % self.num_rows, j % self.num_cols
 
     def get_statistics(self):
         alive = 0

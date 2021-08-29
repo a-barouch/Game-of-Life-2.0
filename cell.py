@@ -23,6 +23,13 @@ class Cell:
         self.age = age
         self.lonely = lonely
 
+    # def valid_indices(self, i, j, board):
+    #     if i >= 0 and j >= 0:  # non negative index
+    #         if i != self.row or j != self.col:  # not current cell
+    #             if i < board.num_rows and j < board.num_cols:  # not exceeding board boundaries
+    #                 return True
+    #     return False
+
     def valid_indices(self, i, j, board):
         if i >= 0 and j >= 0:  # non negative index
             if i != self.row or j != self.col:  # not current cell
@@ -46,13 +53,7 @@ class Cell:
                 self.new_status = DEAD
             else:
                 self.new_status = ALIVE
-        # if self.life_status == ALIVE:
-        #     if total_alive > 3:
-        #         self.new_status = DEAD
-        #     if total_alive < 2 and self.lonely:
-        #         self.new_status = DEAD
-        #     if not self.life_time and self.age:
-        #         self.new_status = DEAD
+
         # creation of a new cell by reproduction
         if total_alive_for_repr == 3 and self.get_life_status() == DEAD:
             self.new_status = ALIVE
@@ -67,6 +68,8 @@ class Cell:
         total_alive, total_alive_for_repr = 0, 0
         for i in range(self.row - 1, self.row + 2):
             for j in range(self.col - 1, self.col + 2):
+                if board.no_boundary:
+                    i, j = board.mod_idx(i, j)
                 if self.valid_indices(i, j, board):
                     cur = board.mat[i][j]
                     if cur.type == self.type:
@@ -80,6 +83,8 @@ class Cell:
             # iterate over neighbors
             for i in range(self.row - 1, self.row + 2):
                 for j in range(self.col - 1, self.col + 2):
+                    if board.no_boundary:
+                        i, j = board.mod_idx(i, j)
                     if self.valid_indices(i, j, board):  # check if indices inside the board and not oneself
                         cur_neighbor = board.mat[i][j]
                         if cur_neighbor.new_status == DEAD:
