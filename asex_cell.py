@@ -14,7 +14,7 @@ class Asex(Cell):
     def __init__(self, row, col, age, lonely):
         Cell.__init__(self, row, col,age,lonely)
         self.type = "ASEXUAL"
-        self.reproduction_prob = 0.3
+        self.reproduction_prob = 0.5
         self.is_preyed = False
         self.lonely = True
         self.age = True

@@ -12,16 +12,16 @@ if __name__ == '__main__':
     IS_GUI = True
     ROWS = 50
     COLUMNS = 50
-    TYPE_PROB_LIST = (50, 50, 0.00)
-    MOVE = False  # default False
+    TYPE_PROB_LIST = (50, 50, 1)
+    MOVE = True  # default False
     AGE = False  # default False
     LONELY = False  # default True
-    NO_BOUNDARY = True  # default false
+    NO_BOUNDARY = False  # default false
 
     if STATISTIC_MODE:
         IS_GUI = False
-        NUM_ITERATIONS = 300
-        NUM_PLAYS = 10
+        NUM_ITERATIONS = 500
+        NUM_PLAYS = 100
         sexual_wins, asexual_wins, extinction = 0, 0, 0
         for i in range(NUM_PLAYS):
             my_board = board.Board(root=root, alive_prob=ALIVE_PROB, gui=IS_GUI, rows=ROWS, cols=COLUMNS,
