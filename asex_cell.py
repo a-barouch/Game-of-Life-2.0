@@ -11,10 +11,10 @@ def flip_coin(rate):
 
 class Asex(Cell):
 
-    def __init__(self, row, col, age, lonely):
+    def __init__(self, row, col, age, lonely, reproduction):
         Cell.__init__(self, row, col,age,lonely)
         self.type = "ASEXUAL"
-        self.reproduction_prob = 0.3
+        self.reproduction_prob = reproduction
         self.is_preyed = False
         self.lonely = True
         self.age = True
@@ -66,7 +66,7 @@ class Asex(Cell):
         child = secrets.choice(dead_neighbors)
         row = child.row
         col = child.col
-        board.mat[row][col] = Asex(row, col, self.age, self.lonely)
+        board.mat[row][col] = Asex(row, col, self.age, self.lonely, self.reproduction_prob)
         board.mat[row][col].new_status = ALIVE
         # if row> self.row and col> self.col:
         #     print("Child: "+str(row)+", "+str(col))

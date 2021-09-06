@@ -16,19 +16,21 @@ def flip_coin(life_rate):
 class Board:
 
     def __init__(self, root, alive_prob, gui, rows=10, cols=10, type_prob_list=(1, 0, 0), move=True, age=True,
-                 lonely=False, no_boundary=False):
+                 lonely=False, no_boundary=False, asexual_reproduction = 0.5):
         if type_prob_list is None:
             type_prob_list = [1, 0, 0]
         self.num_rows = rows
         self.num_cols = cols
         self.age = age
         self.lonely = lonely
+        self.asexual_repr = asexual_reproduction
         self.mat = [[cell.Cell(i, j, self.age, self.lonely) for j in range(self.num_cols)] for i in
                     range(self.num_rows)]
         self.randomize_cells(alive_prob, type_prob_list)
         self.gui = gui
         self.move = move
         self.no_boundary = no_boundary
+
 
         # CODE FOR GUI
         if self.gui:
@@ -111,7 +113,7 @@ class Board:
                     if self.mat[i][j].type == "SEXUAL":
                         new_obj = cell.Cell(new_location.row, new_location.col, self.age, self.lonely)
                     elif self.mat[i][j].type == "ASEXUAL":
-                        new_obj = asex_cell.Asex(new_location.row, new_location.col, self.age, self.lonely)
+                        new_obj = asex_cell.Asex(new_location.row, new_location.col, self.age, self.lonely, self.asexual_repr)
                     elif self.mat[i][j].type == "PREDATOR":
                         new_obj = predator_cell.Predator(new_location.row, new_location.col, self.age)
                     self.mat[new_location.row][new_location.col] = new_obj
@@ -127,7 +129,7 @@ class Board:
                 if cell_type == 'SEXUAL':
                     self.mat[i][j] = cell.Cell(i, j, self.age, self.lonely)
                 elif cell_type == 'ASEXUAL':
-                    self.mat[i][j] = asex_cell.Asex(i, j, self.age, self.lonely)
+                    self.mat[i][j] = asex_cell.Asex(i, j, self.age, self.lonely, self.asexual_repr)
                 elif cell_type == 'PREDATOR':
                     self.mat[i][j] = predator_cell.Predator(i, j, self.age)
                 status = flip_coin(life_rate)
