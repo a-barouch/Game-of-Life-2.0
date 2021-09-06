@@ -5,28 +5,29 @@ import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     STATISTIC_MODE = False
-
+    THRESHOLD_MODE = False
     # GAME PARAMETERS:
     root = None
     ALIVE_PROB = 0.25
     IS_GUI = True
     ROWS = 50
     COLUMNS = 50
-    TYPE_PROB_LIST = (50, 50, 10.00)
-    MOVE = False  # default False
-    AGE = False  # default False
-    LONELY = True  # default True
+    TYPE_PROB_LIST = (50, 50, 2)
+    ASEXUAL_REPR=0.21
+    MOVE = True  # default False
+    AGE = True  # default False
+    LONELY = False  # default True
     NO_BOUNDARY = False  # default false
 
     if STATISTIC_MODE:
         IS_GUI = False
-        NUM_ITERATIONS = 300
-        NUM_PLAYS = 10
+        NUM_ITERATIONS = 100
+        NUM_PLAYS = 100
         sexual_wins, asexual_wins, extinction = 0, 0, 0
         for i in range(NUM_PLAYS):
             my_board = board.Board(root=root, alive_prob=ALIVE_PROB, gui=IS_GUI, rows=ROWS, cols=COLUMNS,
                                    type_prob_list=TYPE_PROB_LIST,
-                                   move=MOVE, age=AGE, lonely=LONELY, no_boundary=NO_BOUNDARY)
+                                   move=MOVE, age=AGE, lonely=LONELY, no_boundary=NO_BOUNDARY, asexual_reproduction = ASEXUAL_REPR)
             for j in range(NUM_ITERATIONS):
                 my_board.update_board()
             sexual, asexual, predator = my_board.get_statistics()
@@ -41,12 +42,44 @@ if __name__ == '__main__':
         print("Total Asexual Wins: " + str(asexual_wins))
         print("Extinctions: " + str(extinction))
 
+    if THRESHOLD_MODE:
+        IS_GUI = False
+        NUM_ITERATIONS = 300
+        NUM_PLAYS = 10
+        threshold_min = 0.35
+        threshold_max = 0.65
+        import numpy as np
+        thresholds = list(np.arange(threshold_min, threshold_max, 0.01))
+        wins_in_thresh = []
+        for thresh in thresholds:
+            sexual_wins, asexual_wins, extinction = 0, 0, 0
+            for play in range(NUM_PLAYS):
+                my_board = board.Board(root=root, alive_prob=ALIVE_PROB, gui=IS_GUI, rows=ROWS, cols=COLUMNS,
+                                       type_prob_list=TYPE_PROB_LIST,
+                                       move=MOVE, age=AGE, lonely=LONELY, no_boundary=NO_BOUNDARY, asexual_reproduction = thresh)
+                for j in range(NUM_ITERATIONS):
+                    my_board.update_board()
+                sexual, asexual, predator = my_board.get_statistics()
+                if sexual > asexual:
+                    sexual_wins += 1
+                elif asexual > sexual:
+                    asexual_wins += 1
+            wins_in_thresh.append(asexual_wins)
+        plt.scatter(x=thresholds, y=wins_in_thresh, color='black')
+        plt.xlabel("asexual reproduction rate")
+        plt.ylabel("asexual wins (10 games)")
+        plt.title("Added Predators, Added Movement")
+        plt.legend()
+        plt.show()
+
+
+
     else:
         if IS_GUI:  # show board on screen
             root = tk.Tk()
         my_board = board.Board(root=root, alive_prob=ALIVE_PROB, gui=IS_GUI, rows=ROWS, cols=COLUMNS,
                                type_prob_list=TYPE_PROB_LIST,
-                               move=MOVE, age=AGE, lonely=LONELY, no_boundary=NO_BOUNDARY)
+                               move=MOVE, age=AGE, lonely=LONELY, no_boundary=NO_BOUNDARY, asexual_reproduction = ASEXUAL_REPR)
         i = 0
         sexual_list, asexual_list, predator_list = [], [], []
         while True:
@@ -65,8 +98,8 @@ if __name__ == '__main__':
                 plt.scatter(x=list(range(len(sexual_list))), y=predator_list, color='red', label='predator')
                 plt.xlabel("iteration")
                 plt.ylabel("count")
-                plt.title("Run: Removed loneliness | Reproduction: 0.25")
-                plt.legend()
+                plt.title("Run: Added Predators and movements, Reproduction rate: "+str(ASEXUAL_REPR))
+                # plt.legend()
                 plt.show()
 
         my_board.root.mainloop()
