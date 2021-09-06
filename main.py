@@ -12,11 +12,11 @@ if __name__ == '__main__':
     IS_GUI = True
     ROWS = 50
     COLUMNS = 50
-    TYPE_PROB_LIST = (50, 50, 0.00)
+    TYPE_PROB_LIST = (50, 50, 10.00)
     MOVE = False  # default False
     AGE = False  # default False
-    LONELY = False  # default True
-    NO_BOUNDARY = True  # default false
+    LONELY = True  # default True
+    NO_BOUNDARY = False  # default false
 
     if STATISTIC_MODE:
         IS_GUI = False
